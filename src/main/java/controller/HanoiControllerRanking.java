@@ -45,7 +45,6 @@ public class HanoiControllerRanking {
                 String[] datos = linea.split("\\|");
                 if (datos.length == 6) {
                     Juego juego = new Juego(
-                        Integer.parseInt(datos[0]), // numeroPartida
                         datos[1],                   // usuario
                         Integer.parseInt(datos[2]), // cantidadDiscos
                         Integer.parseInt(datos[3]), // movimientosManuales

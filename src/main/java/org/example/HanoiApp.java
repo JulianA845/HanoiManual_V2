@@ -52,14 +52,20 @@ public class HanoiApp extends Application {
             }
             case "Manual" -> {
                 ExtensionHanoiModel model = new ExtensionHanoiModel(3);
-                // Ahora le pasamos el modelo al constructor de la vista
                 HanoiviewManual view = new HanoiviewManual(model);
                 new HanoiControllerManual(model, view, primaryStage, usuario);
                 primaryStage.setTitle("Torres de Hanoi – Manual - Usuario: " + usuario);
                 primaryStage.setScene(view.getScene());
             }
-            case "Ranking" -> HanoiControllerRanking.openRanking(primaryStage);
+            case "Ranking" -> {
+                // Abre el ranking en una nueva ventana y sale para no mostrar
+                // el primaryStage vacío
+                HanoiControllerRanking.openRanking(primaryStage);
+                return;
+            }
         }
+
+        // Solo para Automático o Manual
         primaryStage.show();
     }
 

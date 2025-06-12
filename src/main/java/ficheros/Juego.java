@@ -1,34 +1,28 @@
 package ficheros;
 
 public class Juego {
-    private int numeroPartida;
+    private transient int ranking;
     private String usuario;
     private int cantidadDiscos;
     private int movimientosManuales;
     private double porcentajeExactitud;
     private int puntaje;
 
-    public Juego(int numeroPartida,
-                 String usuario,
+    public Juego(String usuario,
                  int cantidadDiscos,
                  int movimientosManuales,
                  double porcentajeExactitud,
                  int puntaje) {
-        this.numeroPartida       = numeroPartida;
         this.usuario             = usuario;
         this.cantidadDiscos      = cantidadDiscos;
         this.movimientosManuales = movimientosManuales;
         this.porcentajeExactitud = porcentajeExactitud;
         this.puntaje             = puntaje;
     }
+    // getter / setter ranking
+    public int getRanking() { return ranking; }
 
-    public int getNumeroPartida() {
-        return numeroPartida;
-    }
-
-    public void setNumeroPartida(int numeroPartida) {
-        this.numeroPartida = numeroPartida;
-    }
+    public void setRanking(int ranking) { this.ranking = ranking; }
 
     public String getUsuario() {
         return usuario;
@@ -69,7 +63,7 @@ public class Juego {
     @Override
     public String toString() {
         // Formato: NoPartida|Usuario|numDiscos|movManuales|%Exactitud|puntaje
-        return numeroPartida + "|" +
+        return "|" +
                usuario + "|" +
                cantidadDiscos + "|" +
                movimientosManuales + "|" +

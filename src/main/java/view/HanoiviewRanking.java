@@ -1,67 +1,81 @@
 package view;
 
 import ficheros.Juego;
-import javafx.collections.FXCollections;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 public class HanoiviewRanking {
-
+    private final TableView<Juego> tableView = new TableView<>();
+    private final TableColumn<Juego, Integer> posicionColumn = new TableColumn<>("Posición");
+    private final TableColumn<Juego, String> usuarioColumn = new TableColumn<>("Usuario");
+    private final TableColumn<Juego, Integer> discosColumn = new TableColumn<>("Discos");
+    private final TableColumn<Juego, Integer> movimientosColumn = new TableColumn<>("Movimientos");
+    private final TableColumn<Juego, Double> exactitudColumn = new TableColumn<>("Exactitud (%)");
+    private final TableColumn<Juego, Integer> puntajeColumn = new TableColumn<>("Puntaje");
+    private final Button backButton = new Button("Volver");
     private final Scene scene;
-    private final TableView<Juego> table;
-    private final Button backButton;
 
     public HanoiviewRanking() {
-        table = new TableView<>();
-        backButton = new Button("Volver");
-        buildUI();
-        scene = new Scene(createRoot(), 600, 400);
-    }
+        // 1) Limpio cualquier definición anterior (por ejemplo, de FXML)
+        tableView.getColumns().clear();
 
-    private void buildUI() {
-        TableColumn<Juego, Integer> colNum   = new TableColumn<>("NoPartida");
-        colNum.setCellValueFactory(new PropertyValueFactory<>("numeroPartida"));
+        // 2) Política para no dejar hueco al final
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<Juego, String> colUser   = new TableColumn<>("Usuario");
-        colUser.setCellValueFactory(new PropertyValueFactory<>("usuario"));
+        // 3) Columnas
+        posicionColumn.setCellValueFactory(cd ->
+            new ReadOnlyObjectWrapper<>(tableView.getItems().indexOf(cd.getValue()) + 1)
+        );
+        posicionColumn.setSortable(false);
 
-        TableColumn<Juego, Integer> colDiscs = new TableColumn<>("Discos");
-        colDiscs.setCellValueFactory(new PropertyValueFactory<>("cantidadDiscos"));
+        usuarioColumn.setCellValueFactory(new PropertyValueFactory<>("usuario"));
+        discosColumn.setCellValueFactory(new PropertyValueFactory<>("cantidadDiscos"));
+        movimientosColumn.setCellValueFactory(new PropertyValueFactory<>("movimientosManuales"));
+        exactitudColumn.setCellValueFactory(new PropertyValueFactory<>("porcentajeExactitud"));
+        puntajeColumn.setCellValueFactory(new PropertyValueFactory<>("puntaje"));
 
-        TableColumn<Juego, Integer> colMoves = new TableColumn<>("Mov.Manuales");
-        colMoves.setCellValueFactory(new PropertyValueFactory<>("movimientosManuales"));
+        // 4) Anchos relativos (opcional, ajusta porcentajes a tu gusto)
+        posicionColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.08));
+        usuarioColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.20));
+        discosColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.14));
+        movimientosColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.18));
+        exactitudColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.20));
+        puntajeColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(0.20));
 
-        TableColumn<Juego, Double>  colPct   = new TableColumn<>("% Exactitud");
-        colPct.setCellValueFactory(new PropertyValueFactory<>("porcentajeExactitud"));
+        // 5) Añadir todas las columnas al TableView
+        tableView.getColumns().addAll(
+            posicionColumn,
+            usuarioColumn,
+            discosColumn,
+            movimientosColumn,
+            exactitudColumn,
+            puntajeColumn
+        );
 
-        TableColumn<Juego, Integer> colScore = new TableColumn<>("Puntaje");
-        colScore.setCellValueFactory(new PropertyValueFactory<>("puntaje"));
+        // 6) Placeholder cuando no hay datos
+        tableView.setPlaceholder(new Label("Sin partidas para mostrar"));
 
-        table.getColumns().addAll(colNum, colUser, colDiscs, colMoves, colPct, colScore);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    }
-
-    private BorderPane createRoot() {
-        BorderPane root = new BorderPane();
+        // Layout
+        VBox root = new VBox(10, tableView, backButton);
         root.setPadding(new Insets(10));
-        root.setCenter(table);
-        root.setBottom(backButton);
-        BorderPane.setMargin(backButton, new Insets(10));
-        return root;
+        scene = new Scene(root, 700, 450);
+    }
+
+    /** Pasa los datos ya ordenados al TableView */
+    public void setData(ObservableList<Juego> datos) {
+        tableView.setItems(datos);
     }
 
     public Scene getScene() {
         return scene;
-    }
-
-    public void setData(ObservableList<Juego> data) {
-        table.setItems(data);
     }
 
     public Button getBackButton() {

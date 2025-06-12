@@ -17,9 +17,6 @@ public class ManejadorDeArchivos {
         }
     }
 
-    /**
-     * Guarda una partida en el fichero con el formato de toString() de Juego.
-     */
     public void guardarPartida(Juego juego) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
             bw.write(juego.toString());
@@ -45,14 +42,13 @@ public class ManejadorDeArchivos {
 
     // Opcional: si quieres mantener compatibilidad con la firma antigua:
     @Deprecated
-    public void guardarPartida(int numeroPartida,
-                               String usuario,
+    public void guardarPartida(String usuario,
                                int numDiscos,
                                int movimientosManuales,
                                double porcentajeExactitud,
                                int puntaje) throws IOException {
         guardarPartida(new Juego(
-            numeroPartida, usuario, numDiscos,
+           usuario, numDiscos,
             movimientosManuales, porcentajeExactitud, puntaje
         ));
     }

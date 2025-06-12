@@ -160,7 +160,6 @@ public class ServicesManual {
 
         try {
             Juego juego = new Juego(
-                    numeroPartida++,
                     usuario,
                     model.getTotalDiscs(),
                     model.getMovimientosManuales(),
